@@ -39,8 +39,8 @@ try {
   const pullCommand = images.map(a => `docker pull ${a}`).join(";");
   const loadCommand = images
     .map(a => `kind load docker-image --name=${kindCluster} ${a}`)
-    .join(parallel ? " &;" : " && ")
-    .concat(parallel ? "; wait" : "");
+    .join(parallel ? " & " : " && ")
+    .concat(parallel ? "& wait" : "");
   exec(pullCommand, (error, stdout, stderr) => {
     if (error) {
       console.log(error);
