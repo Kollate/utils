@@ -47,7 +47,7 @@ try {
       process.exit(1);
     }
     console.log("Images pull complete");
-    console.log("loading images...");
+    console.log("loading images: ", loadCommand);
     exec(loadCommand, err1 => {
       if (err1) {
         console.log(err1);
