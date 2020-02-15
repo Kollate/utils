@@ -12,31 +12,41 @@ const argv = yargs
     describe: "the kind cluster to load file to",
     default: "kind"
   })
+  .option("parallel", {
+    alias: "p",
+    type: "boolean",
+    describe: "whether kind load image should be in parallel",
+    default: false
+  })
   .demandCommand(
     1,
     "You must provide the kustomization filename with image tags"
   )
   .help().argv;
 
-const kindCluster = argv.kind || "kind";
+const kindCluster = argv.kind;
+const parallel = argv.parallel;
 const filePath = argv._[0];
 
 const yamlFile = path.resolve(filePath);
+
+console.log(`kindCluster: ${kindCluster}; parallel: ${parallel}`);
 
 try {
   const doc = yaml.safeLoad(fs.readFileSync(yamlFile, "utf8"));
   const images = doc.images.map(a => `${a.name}:${a.newTag}`);
   console.log(`pulling images: ${images.join("\n")}`);
   const pullCommand = images.map(a => `docker pull ${a}`).join(";");
+  const loadCommand = images
+    .map(a => `kind load docker-image --name=${kindCluster} ${a}`)
+    .join(parallel ? " &;" : " && ")
+    .concat(parallel ? "; wait" : "");
   exec(pullCommand, (error, stdout, stderr) => {
     if (error) {
       console.log(error);
       process.exit(1);
     }
     console.log("Images pull complete");
-    const loadCommand = images
-      .map(a => `kind load docker-image --name=${kindCluster} ${a}`)
-      .join(" && ");
     console.log("loading images...");
     exec(loadCommand, err1 => {
       if (err1) {
@@ -45,8 +55,6 @@ try {
       }
       console.log("Load complete");
     });
-    // k run group --image=gcr.io/kollate-218719/group-service:761d438354254949ad29d54bc7faeb51081f4a4e --restart=Never
-    // kind load docker-image --name="kind-3" gcr.io/kollate-218719/group-service:761d438354254949ad29d54bc7faeb51081f4a4e
   });
 } catch (e) {
   console.log(e);
