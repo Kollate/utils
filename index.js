@@ -1,7 +1,8 @@
 const yargs = require("yargs");
 const loadImages = require("./loadImages");
 const getImageTag = require("./getImageTag");
-const temp = require("./temp");
+const { canIDeploy } = require("./canIDeploy");
+// const temp = require("./temp");
 
 // yargs.command(temp).help().argv;
 
@@ -40,6 +41,47 @@ yargs
           imageName: argv.imageName
         })
       );
+    }
+  )
+  .command(
+    "canIDeploy <filepath>",
+    "Check if the pacticipants in the kustomization file with tags pass the deployment test",
+    yargs => {
+      return yargs
+        .option("brokerToken", {
+          alias: "t",
+          type: "strring",
+          describe: "broker auth token"
+        })
+        .demand(["brokerToken"])
+        .option("brokerUrl", {
+          alias: "b",
+          type: "string",
+          describe: "pact broker url",
+          default: "https://crewhood.pact.dius.com.au"
+        })
+        .option("retryTimes", {
+          alias: "N",
+          type: "number",
+          describe:
+            "number of times pact broker should check if the pacticipants are compatible",
+          default: 5
+        })
+        .option("retryInterval", {
+          alias: "I",
+          type: "number",
+          describe: "interval (in seconds) between checks",
+          default: 30
+        });
+    },
+    argv => {
+      return canIDeploy({
+        kustomizeFile: argv.filepath,
+        retryInterval: argv.retryInterval,
+        retryTimes: argv.retryTimes,
+        brokerToken: argv.brokerToken,
+        brokerUrl: argv.brokerUrl
+      });
     }
   )
   .demandCommand(1, "You must select one of the commands")
