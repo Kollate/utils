@@ -50,10 +50,21 @@ yargs
       return yargs
         .option("brokerToken", {
           alias: "t",
-          type: "strring",
+          type: "string",
           describe: "broker auth token"
         })
         .demand(["brokerToken"])
+        .option("consumer", {
+          type: "string",
+          describe: "name of the consumer"
+        })
+        .demand(["consumer"])
+        .option("providers", {
+          type: "array",
+          describe: "providers on which the consumer depends"
+        })
+        .demand(["providers"])
+        .check(argv => argv.providers.length > 0, false)
         .option("brokerUrl", {
           alias: "b",
           type: "string",
@@ -77,6 +88,8 @@ yargs
     argv => {
       return canIDeploy({
         kustomizeFile: argv.filepath,
+        consumer: argv.consumer,
+        providers: argv.providers,
         retryInterval: argv.retryInterval,
         retryTimes: argv.retryTimes,
         brokerToken: argv.brokerToken,

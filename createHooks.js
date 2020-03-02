@@ -6,15 +6,16 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 const JENKINS_USERNAME = process.env.JENKINS_USERNAME;
-const JENKINS_USERTOKEN = process.env.JENKINS_USERTOKEN;
+const JENKINS_USERTOKEN = process.env.JENKINS_API_TOKEN;
 const JENKINS_HTTPS_URL = process.env.JENKINS_HTTPS_URL;
 const PACT_BROKER_TOKEN = process.env.PACT_BROKER_TOKEN;
 const PACT_BROKER_URL = process.env.PACT_BROKER_URL;
+const JENKINS_CRUMB = process.env.JENKINS_CRUMB;
 
 const providerMap = {
   "auth-service": ["group-service"],
-  frontend: ["gateway"],
-  gateway: ["auth-service", "group-service"]
+  frontend: ["auth-service", "group-service", "file-service"]
+  // gateway: ["auth-service", "group-service"]
 };
 
 async function createWebhook(consumer, provider) {
@@ -22,10 +23,11 @@ async function createWebhook(consumer, provider) {
     pact-broker create-webhook \
     ${JENKINS_HTTPS_URL}/job/${provider}/job/master/buildWithParameters?PACT_VERIFY=true \
     --request=POST \
+    --header=Jenkins-Crumb:${JENKINS_CRUMB} \
     --contract-content-changed \
     --consumer=${getPacticipant(consumer)} \
     --provider=${getPacticipant(provider)} \
-    --user=${JENKINS_USERNAME}:${JENKINS_USERTOKEN} \
+    --user="${JENKINS_USERNAME}:${JENKINS_USERTOKEN}" \
     --broker-base-url="${PACT_BROKER_URL}" \
     --broker-token="${PACT_BROKER_TOKEN}"
   `);

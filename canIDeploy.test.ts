@@ -1,17 +1,26 @@
 const path = require("path");
-const { canIDeploy } = require("./canIDeploy");
+const { canIDeploy, getPacticipants } = require("./canIDeploy");
 
 jest.setTimeout(60000);
 describe("canIDeploy", () => {
-  test("canIDeploy", async () => {
+  test("canIDeploy pacticipant test", async () => {
     const filePath = path.resolve(
       __dirname,
       "./__tests__/deploy-kustomization.yaml"
     );
-    await canIDeploy({
+    let result = getPacticipants({
       kustomizeFile: filePath,
-      retryTimes: 1,
-      retryInterval: 10
+      serviceNames: ["frontend", "gateway"]
     });
+    expect(result.map(a => a.name)).toEqual(
+      expect.arrayContaining(["Frontend", "Gateway"])
+    );
+    result = getPacticipants({
+      kustomizeFile: filePath,
+      serviceNames: ["frontend", "gateway", "auth-service"]
+    });
+    expect(result.map(a => a.name)).toEqual(
+      expect.arrayContaining(["Frontend", "Gateway", "AuthService"])
+    );
   });
 });
