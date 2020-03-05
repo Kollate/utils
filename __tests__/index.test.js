@@ -1,6 +1,7 @@
 const yargs = require("yargs");
 const loadImages = require("../loadImages");
 const getImageTag = require("../getImageTag");
+const { getImages } = require("../getImages");
 // const temp = require("../temp");
 
 // test("temp", done => {
@@ -11,32 +12,32 @@ const getImageTag = require("../getImageTag");
 //   });
 // });
 
-describe("load images", () => {
-  jest.setTimeout(60 * 1000);
-  test("Load all Images", async done => {
-    try {
-      loadImages({
-        yamlFile: __dirname + "/kustomization.yaml",
-        cb: done
-      });
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  });
-  test("Load images with skip", async done => {
-    try {
-      loadImages({
-        yamlFile: __dirname + "/kustomization.yaml",
-        cb: done,
-        skipImage: "hashicorp/http-echo"
-      });
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  });
-});
+// describe("load images", () => {
+//   jest.setTimeout(60 * 1000);
+//   test("Load all Images", async done => {
+//     try {
+//       loadImages({
+//         yamlFile: __dirname + "/kustomization.yaml",
+//         cb: done
+//       });
+//     } catch (e) {
+//       console.log(e);
+//       throw e;
+//     }
+//   });
+//   test("Load images with skip", async done => {
+//     try {
+//       loadImages({
+//         yamlFile: __dirname + "/kustomization.yaml",
+//         cb: done,
+//         skipImage: "hashicorp/http-echo"
+//       });
+//     } catch (e) {
+//       console.log(e);
+//       throw e;
+//     }
+//   });
+// });
 
 // describe("loadImages parser", () => {
 //   test("loadImages file", async done => {

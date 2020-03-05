@@ -32,5 +32,5 @@ pact-broker create-webhook http://myjenkins:8080/job/auth-service/job/master/bui
 pact-broker create-webhook \
 http://myjenkins:8080/job/test/buildWithParameters?PACT_VERIFY=true \
 --request=POST --contract-content-changed \
---provider=AuthService --user=surajkeshri:11d68c6558003716571dd8f4a9b544b76b \
+--provider=AuthService --user=surajkeshri:password \
 --broker-base-url=$PACT_BROKER_URL --broker-token=$PACT_BROKER_TOKEN

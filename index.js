@@ -1,6 +1,7 @@
 const yargs = require("yargs");
 const loadImages = require("./loadImages");
 const getImageTag = require("./getImageTag");
+const { getImages } = require("./getImages");
 const { canIDeploy } = require("./canIDeploy");
 // const temp = require("./temp");
 
@@ -41,6 +42,16 @@ yargs
           imageName: argv.imageName
         })
       );
+    }
+  )
+  .command(
+    "getImages <filepath>",
+    "get all the images with tags in kustomize yaml file",
+    yargs => {
+      return yargs;
+    },
+    argv => {
+      console.log(getImages(argv.filepath));
     }
   )
   .command(

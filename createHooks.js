@@ -13,8 +13,9 @@ const PACT_BROKER_URL = process.env.PACT_BROKER_URL;
 const JENKINS_CRUMB = process.env.JENKINS_CRUMB;
 
 const providerMap = {
-  "auth-service": ["group-service"],
-  frontend: ["auth-service", "group-service", "file-service"]
+  "auth-service": ["group-service", "email-service"],
+  frontend: ["auth-service", "group-service", "file-service"],
+  "email-service": ["group-service"]
   // gateway: ["auth-service", "group-service"]
 };
 

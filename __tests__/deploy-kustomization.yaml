@@ -5,10 +5,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
   - name: gcr.io/kollate-218719/auth-service
-    newTag: 4284bc991c815591eddaf6034d0dfc171fdfa77d
+    newTag: latest
   - name: gcr.io/kollate-218719/frontend
-    newTag: 27c177e79511aa74a43a5dd319274910c8a3cc1d
+    newTag: latest
   - name: gcr.io/kollate-218719/gateway
-    newTag: a4349c2c93535f9db51e73e701f6aadb229e8ac3
+    newTag: latest
   - name: gcr.io/kollate-218719/group-service
-    newTag: d45454cab2ff92c6e60e7af731639fbbfc3f79d9
+    newTag: latest
