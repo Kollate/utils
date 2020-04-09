@@ -14,14 +14,16 @@ const JENKINS_CRUMB = process.env.JENKINS_CRUMB;
 
 const providerMap = {
   "auth-service": ["group-service", "email-service"],
-  frontend: ["auth-service", "group-service", "file-service"],
-  "email-service": ["group-service"]
+  frontend: ["auth-service", "group-service", "file-service", "email-service"],
+  "email-service": ["group-service"],
+  "group-service": ["email-service"],
+  "qa-service": ["group-service"],
   // gateway: ["auth-service", "group-service"]
 };
 
 async function createWebhook(consumer, provider) {
   const { stdout, stderr } = await exec(`
-    pact-broker create-webhook \
+    npx pact-broker create-webhook \
     ${JENKINS_HTTPS_URL}/job/${provider}/job/master/buildWithParameters?PACT_VERIFY=true \
     --request=POST \
     --header=Jenkins-Crumb:${JENKINS_CRUMB} \
@@ -40,7 +42,7 @@ async function createWebhook(consumer, provider) {
   await Promise.all(
     _.flatten(
       Object.entries(providerMap).map(([consumer, providers]) => {
-        return providers.map(p => createWebhook(consumer, p));
+        return providers.map((p) => createWebhook(consumer, p));
       })
     )
   );
