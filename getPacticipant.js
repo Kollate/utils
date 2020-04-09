@@ -1,17 +1,10 @@
-const capitalize = require("capitalize");
 const _ = require("lodash");
 
-// exports.getPacticipant = (service) =>
-//   capitalize
-//     .words(
-//       _.last(service.split("/"))
-//         .split("-")
-//         .join(" ")
-//     )
-//     .split(" ")
-//     .join("");
+const getPacticipantForImage = (service) => {
+  return getPacticipant(_.last(service.split("/")));
+};
 
-exports.getPacticipant = (service) => {
+const getPacticipant = (service) => {
   switch (service) {
     case "group-service":
       return "GroupService";
@@ -27,7 +20,14 @@ exports.getPacticipant = (service) => {
       return "FileService";
     case "email-service":
       return "EmailService";
+    case "email-processor-service":
+      return "EmailProcessorService";
     default:
       throw new Error("Pacticipant not matched");
   }
+};
+
+module.exports = {
+  getPacticipantForImage,
+  getPacticipant,
 };

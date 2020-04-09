@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "",
   "main": "index.js",
   "bin": "index.js",
@@ -9,8 +9,15 @@
     "pretest:kind": "KUBECONFIG=./config.yaml kind create cluster",
     "test": "jest",
     "test:watch": "jest --watch || :",
+    "prepublish:docker": "npm version patch",
+    "publish:docker": "docker build -t ${GCR}/utils:$npm_package_version . && docker publish ${GCR}/utils:$npm_package_version",
     "posttest:kind": "rm ./config.yaml && KUBECONFIG=./config.yaml kind delete cluster",
     "package": "pkg -t node10-macos-x64,node10-linux-x64 -o=packages/utils ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
   },
   "pkg": {
     "assets": [
@@ -24,6 +31,7 @@
     "@pact-foundation/pact-node": "^10.4.0",
     "capitalize": "^2.0.2",
     "dotenv": "^8.2.0",
+    "husky": "^4.2.4",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "minimist": "^1.2.0",

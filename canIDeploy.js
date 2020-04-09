@@ -1,6 +1,6 @@
 require("dotenv").config();
 const path = require("path");
-const { getPacticipant } = require("./getPacticipant");
+const { getPacticipant, getPacticipantForImage } = require("./getPacticipant");
 const fs = require("fs");
 const yaml = require("js-yaml");
 const _ = require("lodash");
@@ -12,13 +12,13 @@ function getPacticipants({ kustomizeFile, serviceNames }) {
 
   const imageTagPairs = _.fromPairs(
     doc.images
-      .filter(a => serviceNames.indexOf(_.last(a.name.split("/"))) > -1)
-      .map(a => [getPacticipant(a.name), a.newTag])
+      .filter((a) => serviceNames.indexOf(_.last(a.name.split("/"))) > -1)
+      .map((a) => [getPacticipantForImage(a.name), a.newTag])
   );
 
   const pacticipants = Object.entries(imageTagPairs).map(([name, version]) => ({
     name,
-    version
+    version,
   }));
   return pacticipants;
 }
@@ -32,7 +32,7 @@ exports.canIDeploy = function({
   brokerUrl,
   brokerToken,
   consumer,
-  providers
+  providers,
   // verbose
 }) {
   const defaultOptions = {
@@ -40,12 +40,12 @@ exports.canIDeploy = function({
     pactBrokerToken: brokerToken || process.env.PACT_BROKER_TOKEN,
     retryWhileUnknown: retryTimes || 5,
     retryInterval: retryInterval || 30,
-    output: "table"
+    output: "table",
   };
-  const promises = providers.map(provider => {
+  const promises = providers.map((provider) => {
     const pacticipants = getPacticipants({
       kustomizeFile,
-      serviceNames: [consumer, provider]
+      serviceNames: [consumer, provider],
     });
     const canDeployOptions = { pacticipants, ...defaultOptions };
     return pact.canDeploy(canDeployOptions).catch(
@@ -53,7 +53,7 @@ exports.canIDeploy = function({
         await pact.canDeploy({
           ...canDeployOptions,
           retryWhileUnknown: 0,
-          retryInterval: 0
+          retryInterval: 0,
         })
     );
   });

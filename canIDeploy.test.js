@@ -10,16 +10,16 @@ describe("canIDeploy", () => {
     );
     let result = getPacticipants({
       kustomizeFile: filePath,
-      serviceNames: ["frontend", "gateway"]
+      serviceNames: ["frontend", "gateway"],
     });
-    expect(result.map(a => a.name)).toEqual(
+    expect(result.map((a) => a.name)).toEqual(
       expect.arrayContaining(["Frontend", "Gateway"])
     );
     result = getPacticipants({
       kustomizeFile: filePath,
-      serviceNames: ["frontend", "gateway", "auth-service"]
+      serviceNames: ["frontend", "gateway", "auth-service"],
     });
-    expect(result.map(a => a.name)).toEqual(
+    expect(result.map((a) => a.name)).toEqual(
       expect.arrayContaining(["Frontend", "Gateway", "AuthService"])
     );
   });
