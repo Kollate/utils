@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch || :",
     "prepublish:docker": "npm version patch",
-    "publish:docker": "docker build -t ${GCR}/utils:$npm_package_version . && docker publish ${GCR}/utils:$npm_package_version",
+    "publish:docker": "docker build -t ${GCR}/utils:$npm_package_version . && docker push ${GCR}/utils:$npm_package_version",
     "posttest:kind": "rm ./config.yaml && KUBECONFIG=./config.yaml kind delete cluster",
     "package": "pkg -t node10-macos-x64,node10-linux-x64 -o=packages/utils ."
   },
